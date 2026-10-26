@@ -37,30 +37,28 @@ jobs:
           pytest tests/integration/
           pytest tests/e2e/
 
-    security:
-      needs: test
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
+  security:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Build Docker image
-          run: docker build -t app:test .
+      - name: Build image
+        run: docker build -t app:test .
 
-        - name: Install Trivy
-          run: |
-            sudo apt-get update
-            sudo apt-get install -y wget
-            wget -qO- https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.76.0
+      - name: Install Trivy
+        run: |
+          wget -qO- https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.76.0
 
-        - name: Run Trivy security scan
-          run: |
-            trivy image \
-              --scanners vuln \
-              --severity HIGH,CRITICAL \
-              --ignore-unfixed \
-              --skip-files "**/pip/_vendor/bom.cdx.json" \
-              --exit-code 1 \
-              app:test
+      - name: Run Trivy
+        run: |
+          trivy image \
+            --scanners vuln \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            --skip-files "**/pip/_vendor/bom.cdx.json" \
+            --exit-code 1 \
+            app:test
 
   deploy:
     needs: security
