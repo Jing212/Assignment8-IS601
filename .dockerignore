@@ -1,0 +1,28 @@
+# Python virtual environments
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Git files
+.git/
+.github/
+
+# Local environment files
+.env
+.env.*
+
+# Local development files
+.vscode/
+.DS_Store
+
+# Security scan reports
+trivy-report.json
